@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  */
 class EigenschaftenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
@@ -15,7 +15,13 @@ class EigenschaftenController extends AppController {
  */
 	public function index() {
 		$this->Eigenschaft->recursive = 0;
-		$this->set('eigenschaften', $this->paginate());
+		$talente = $this->Eigenschaft->find('all');
+		$xml['eigenschaften'] = array();
+		foreach ($talente as $talent) {
+			$xml['eigenschaften']['eigenschaft'][] = $talent['Eigenschaft'];
+		}
+		$this->set('eigenschaften', $xml);
+		$this->set('_serialize', 'eigenschaften');
 	}
 
 /**
@@ -29,7 +35,10 @@ class EigenschaftenController extends AppController {
 		if (!$this->Eigenschaft->exists()) {
 			throw new NotFoundException(__('Invalid eigenschaft'));
 		}
-		$this->set('eigenschaft', $this->Eigenschaft->read(null, $id));
+		$talent = $this->Eigenschaft->read(null, $id);
+		$xml['eigenschaft'] = $talent['Eigenschaft'];
+		$this->set('eigenschaft', $xml);
+		$this->set('_serialize', 'eigenschaft');
 	}
 
 /**
@@ -41,56 +50,13 @@ class EigenschaftenController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Eigenschaft->create();
 			if ($this->Eigenschaft->save($this->request->data)) {
-				$this->Session->setFlash(__('The eigenschaft has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$xml['eigenschaft']['id'] = $this->Eigenschaft->id;
+				$xml['eigenschaft']['name'] = $this->Eigenschaft->name;
+				$this->set('eigenschaft', $xml);
+				$this->set('_serialize', 'eigenschaft');
 			} else {
-				$this->Session->setFlash(__('The eigenschaft could not be saved. Please, try again.'));
+				$this->response->statusCode(400);
 			}
 		}
-	}
-
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		$this->Eigenschaft->id = $id;
-		if (!$this->Eigenschaft->exists()) {
-			throw new NotFoundException(__('Invalid eigenschaft'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Eigenschaft->save($this->request->data)) {
-				$this->Session->setFlash(__('The eigenschaft has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The eigenschaft could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->Eigenschaft->read(null, $id);
-		}
-	}
-
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
-		$this->Eigenschaft->id = $id;
-		if (!$this->Eigenschaft->exists()) {
-			throw new NotFoundException(__('Invalid eigenschaft'));
-		}
-		if ($this->Eigenschaft->delete()) {
-			$this->Session->setFlash(__('Eigenschaft deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Eigenschaft was not deleted'));
-		$this->redirect(array('action' => 'index'));
 	}
 }

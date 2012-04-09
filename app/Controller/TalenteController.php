@@ -7,6 +7,7 @@ App::uses('AppController', 'Controller');
  */
 class TalenteController extends AppController {
 
+	public $components = array('RequestHandler');
 
 /**
  * index method
@@ -15,10 +16,13 @@ class TalenteController extends AppController {
  */
 	public function index() {
 		$this->Talent->recursive = 0;
-		$this->set('talente', $this->paginate());
-		$talente['talente'] = $this->Talent->find('all');
-		$this->set('talenteForXml', $talente);
-		$this->set('_serialize', 'talenteForXml');
+		$talente = $this->Talent->find('all');
+		$xml['talente'] = array();
+		foreach ($talente as $talent) {
+			$xml['talente']['talent'][] = $talent['Talent'];
+		}
+		$this->set('talente', $xml);
+		$this->set('_serialize', 'talente');
 	}
 
 /**
@@ -32,7 +36,10 @@ class TalenteController extends AppController {
 		if (!$this->Talent->exists()) {
 			throw new NotFoundException(__('Invalid talent'));
 		}
-		$this->set('talent', $this->Talent->read(null, $id));
+		$talent = $this->Talent->read(null, $id);
+		$xml['talent'] = $talent['Talent'];
+		$this->set('talent', $xml);
+		$this->set('_serialize', 'talent');
 	}
 
 /**
@@ -44,66 +51,13 @@ class TalenteController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Talent->create();
 			if ($this->Talent->save($this->request->data)) {
-				$this->Session->setFlash(__('The talent has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$xml['talent']['id'] = $this->Talent->id;
+				$xml['talent']['name'] = $this->Talent->name;
+				$this->set('talent', $xml);
+				$this->set('_serialize', 'talent');
 			} else {
-				$this->Session->setFlash(__('The talent could not be saved. Please, try again.'));
+				$this->response->statusCode(400);
 			}
 		}
-		$talentarten = $this->Talent->Talentart->find('list');
-		$probe1en = $this->Talent->Probe1->find('list');
-		$probe2en = $this->Talent->Probe2->find('list');
-		$probe3en = $this->Talent->Probe3->find('list');
-		$this->set(compact('talentarten', 'probe1en', 'probe2en', 'probe3en'));
-	}
-
-/**
- * edit method
- *
- * @param string $id
- * @return void
- */
-	public function edit($id = null) {
-		$this->Talent->id = $id;
-		if (!$this->Talent->exists()) {
-			throw new NotFoundException(__('Invalid talent'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Talent->save($this->request->data)) {
-				$this->Session->setFlash(__('The talent has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The talent could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->Talent->read(null, $id);
-		}
-		$talentarten = $this->Talent->Talentart->find('list');
-		$probe1en = $this->Talent->Probe1->find('list');
-		$probe2en = $this->Talent->Probe2->find('list');
-		$probe3en = $this->Talent->Probe3->find('list');
-		$this->set(compact('talentarten', 'probe1en', 'probe2en', 'probe3en'));
-	}
-
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
-		$this->Talent->id = $id;
-		if (!$this->Talent->exists()) {
-			throw new NotFoundException(__('Invalid talent'));
-		}
-		if ($this->Talent->delete()) {
-			$this->Session->setFlash(__('Talent deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Talent was not deleted'));
-		$this->redirect(array('action' => 'index'));
 	}
 }
