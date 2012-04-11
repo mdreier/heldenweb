@@ -7,16 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class HeldenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->Held->recursive = 0;
-		$this->set('helden', $this->paginate());
-		$this->set('_serialize', 'helden');
+		$this->indexForXml($this->Held);
 	}
 
 /**
@@ -26,12 +24,7 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->Held->id = $id;
-		if (!$this->Held->exists()) {
-			throw new NotFoundException(__('Invalid held'));
-		}
-		$this->set('held', $this->Held->read(null, $id));
-		$this->set('_serialize', 'held');
+		$this->viewForXml($this->Held, $id);
 	}
 
 /**
@@ -40,6 +33,7 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function add() {
+		/*
 		if ($this->request->is('post')) {
 			$this->Held->create();
 			if ($this->Held->save($this->request->data)) {
@@ -55,6 +49,8 @@ class HeldenController extends AppController {
 		$vorteile = $this->Held->Vorteil->find('list');
 		$zauber = $this->Held->Zauber->find('list');
 		$this->set(compact('eigenschaften', 'sonderfertigkeiten', 'talente', 'vorteile', 'zauber'));
+		*/
+		$this->addForXml($this->Held);
 	}
 
 /**

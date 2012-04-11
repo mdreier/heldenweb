@@ -33,4 +33,82 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
+	/**
+	 * Write many objects' data into an array which can be shown by the default XML view.
+	 *
+	 * @param $object The model instance.
+	 */
+	protected function indexForXml($model) {
+		//Get XML element names
+		$elementName = strtolower($this->modelClass);
+		$rootElementName = Inflector::pluralize($elementName);
+
+		//Retrieve data from DB
+		$model->recursive = 0;
+		$objects = $model->find('all');
+
+		//Write array for XML
+		$xml[$rootElementName] = array();
+		foreach ($objects as $object) {
+			$xml[$rootElementName][$elementName][] = $object[$this->modelClass];
+		}
+
+		//Set view variables
+		$this->set($rootElementName, $xml);
+		$this->set('_serialize', $rootElementName);
+	}
+
+	/**
+	 * Write an object's data into an array which can be shown by the default XML view.
+	 *
+	 * @param string $id The object's ID.
+	 * @param $model The model instance.
+	 */
+	protected function viewForXml($model, $id) {
+		//Get XML element names
+		$elementName = strtolower($this->modelClass);
+
+		//Get Object from DB
+		$model->id = $id;
+		if (!$model->exists()) {
+			throw new NotFoundException(__('Invalid ' . $model));
+		}
+		$object = $model->read(null, $id);
+
+		//Write array for XML
+		$xml[$elementName] = $object[$this->modelClass];
+		foreach ($object as $key => $value) {
+			if ($key == $this->modelClass) {
+				continue;
+			}
+			$xml[$elementName][$key] = $value;
+		}
+
+		//Set view variables
+		$this->set($elementName, $xml);
+		$this->set('_serialize', $elementName);
+	}
+
+	/**
+	 * Add a new object to the DB. Input is expected as POST data.
+	 * @param $model The model instance.
+	 */
+	protected function addForXml($model) {
+		//Get XML element names
+		$elementName = strtolower($this->modelClass);
+		if ($this->request->is('post')) {
+			//Create object
+			$model->create();
+			//Write data to DB and save
+			if ($model->save($this->request->data)) {
+				$xml[$elementName]['id'] = $model->id;
+				$xml[$elementName]['name'] = $model->name;
+				$this->set($elementName, $xml);
+				$this->set('_serialize', $elementName);
+			} else {
+				$this->response->statusCode(400);
+				$this->response->send();
+			}
+		}
+	}
 }
