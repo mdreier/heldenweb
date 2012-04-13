@@ -7,15 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class HeldenTalentenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->HeldenTalent->recursive = 0;
-		$this->set('heldenTalenten', $this->paginate());
+		$this->indexForXml($this->HeldenTalent);
 	}
 
 /**
@@ -25,11 +24,7 @@ class HeldenTalentenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->HeldenTalent->id = $id;
-		if (!$this->HeldenTalent->exists()) {
-			throw new NotFoundException(__('Invalid helden talent'));
-		}
-		$this->set('heldenTalent', $this->HeldenTalent->read(null, $id));
+		$this->viewForXml($this->HeldenTalent, $id);
 	}
 
 /**
@@ -38,15 +33,7 @@ class HeldenTalentenController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->HeldenTalent->create();
-			if ($this->HeldenTalent->save($this->request->data)) {
-				$this->Session->setFlash(__('The helden talent has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The helden talent could not be saved. Please, try again.'));
-			}
-		}
+		$this->addForXml($this->HeldenTalent);
 	}
 
 /**

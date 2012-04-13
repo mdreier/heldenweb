@@ -7,15 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class HeldenZauberController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->HeldenZauber->recursive = 0;
-		$this->set('heldenZauber', $this->paginate());
+		$this->indexForXml($this->EigenschaftenHeld);
 	}
 
 /**
@@ -25,11 +24,7 @@ class HeldenZauberController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->HeldenZauber->id = $id;
-		if (!$this->HeldenZauber->exists()) {
-			throw new NotFoundException(__('Invalid helden zauber'));
-		}
-		$this->set('heldenZauber', $this->HeldenZauber->read(null, $id));
+		$this->viewForXml($this->EigenschaftenHeld, $id);
 	}
 
 /**
@@ -38,15 +33,7 @@ class HeldenZauberController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->HeldenZauber->create();
-			if ($this->HeldenZauber->save($this->request->data)) {
-				$this->Session->setFlash(__('The helden zauber has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The helden zauber could not be saved. Please, try again.'));
-			}
-		}
+		$this->addForXml($this->EigenschaftenHeld);
 	}
 
 /**

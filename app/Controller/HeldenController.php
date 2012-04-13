@@ -33,24 +33,21 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function add() {
-		/*
 		if ($this->request->is('post')) {
+			//Create object
 			$this->Held->create();
-			if ($this->Held->save($this->request->data)) {
-				$this->Session->setFlash(__('The held has been saved'));
-				$this->redirect(array('action' => 'index'));
+			//Write data to DB and save
+			if ($this->Held->save($this->request->data["held"])) {
+				$this->Held->read();
+				$xml['held']['id'] = $this->Held->id;
+				$xml['held']['name'] = $this->Held->data['Held']['name'];
+				$this->set('held', $xml);
+				$this->set('_serialize', 'held');
 			} else {
-				$this->Session->setFlash(__('The held could not be saved. Please, try again.'));
+				$this->response->statusCode(400);
+				$this->response->send();
 			}
 		}
-		$eigenschaften = $this->Held->Eigenschaft->find('list');
-		$sonderfertigkeiten = $this->Held->Sonderfertigkeit->find('list');
-		$talente = $this->Held->Talent->find('list');
-		$vorteile = $this->Held->Vorteil->find('list');
-		$zauber = $this->Held->Zauber->find('list');
-		$this->set(compact('eigenschaften', 'sonderfertigkeiten', 'talente', 'vorteile', 'zauber'));
-		*/
-		$this->addForXml($this->Held);
 	}
 
 /**

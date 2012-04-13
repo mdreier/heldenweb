@@ -97,7 +97,7 @@ class Held extends AppModel {
  *
  * @var array
  */
-	public $hasMany = array(
+	public $hasOne = array(
 		'Beschreibung' => array(
 			'className' => 'Beschreibung',
 			'foreignKey' => 'held_id',

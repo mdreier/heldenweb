@@ -7,15 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class EigenschaftenHeldenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->EigenschaftenHeld->recursive = 0;
-		$this->set('eigenschaftenHelden', $this->paginate());
+		$this->indexForXml($this->EigenschaftenHeld);
 	}
 
 /**
@@ -25,11 +24,7 @@ class EigenschaftenHeldenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->EigenschaftenHeld->id = $id;
-		if (!$this->EigenschaftenHeld->exists()) {
-			throw new NotFoundException(__('Invalid eigenschaften held'));
-		}
-		$this->set('eigenschaftenHeld', $this->EigenschaftenHeld->read(null, $id));
+		$this->viewForXml($this->EigenschaftenHeld, $id);
 	}
 
 /**
@@ -38,18 +33,7 @@ class EigenschaftenHeldenController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->EigenschaftenHeld->create();
-			if ($this->EigenschaftenHeld->save($this->request->data)) {
-				$this->Session->setFlash(__('The eigenschaften held has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The eigenschaften held could not be saved. Please, try again.'));
-			}
-		}
-		$helden = $this->EigenschaftenHeld->Held->find('list');
-		$eigenschaften = $this->EigenschaftenHeld->Eigenschaft->find('list');
-		$this->set(compact('helden', 'eigenschaften'));
+		$this->addForXml($this->EigenschaftenHeld);
 	}
 
 /**

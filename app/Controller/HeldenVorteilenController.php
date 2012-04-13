@@ -7,15 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class HeldenVorteilenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->HeldenVorteil->recursive = 0;
-		$this->set('heldenVorteilen', $this->paginate());
+		$this->indexForXml($this->HeldenVorteil);
 	}
 
 /**
@@ -25,11 +24,7 @@ class HeldenVorteilenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->HeldenVorteil->id = $id;
-		if (!$this->HeldenVorteil->exists()) {
-			throw new NotFoundException(__('Invalid helden vorteil'));
-		}
-		$this->set('heldenVorteil', $this->HeldenVorteil->read(null, $id));
+		$this->viewForXml($this->HeldenVorteil, $id);
 	}
 
 /**
@@ -38,15 +33,7 @@ class HeldenVorteilenController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->HeldenVorteil->create();
-			if ($this->HeldenVorteil->save($this->request->data)) {
-				$this->Session->setFlash(__('The helden vorteil has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The helden vorteil could not be saved. Please, try again.'));
-			}
-		}
+		$this->addForXml($this->HeldenVorteil);
 	}
 
 /**

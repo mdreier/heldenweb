@@ -102,7 +102,7 @@ class AppController extends Controller {
 			//Write data to DB and save
 			if ($model->save($this->request->data)) {
 				$xml[$elementName]['id'] = $model->id;
-				$xml[$elementName]['name'] = $model->name;
+				$xml[$elementName]['name'] = $model->data[$this->modelClass][$model->displayField];
 				$this->set($elementName, $xml);
 				$this->set('_serialize', $elementName);
 			} else {

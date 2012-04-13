@@ -7,15 +7,14 @@ App::uses('AppController', 'Controller');
  */
 class HeldenSonderfertigkeitenController extends AppController {
 
-
+	public $components = array('RequestHandler');
 /**
  * index method
  *
  * @return void
  */
 	public function index() {
-		$this->HeldenSonderfertigkeit->recursive = 0;
-		$this->set('heldenSonderfertigkeiten', $this->paginate());
+		$this->indexForXml($this->HeldenSonderfertigkeit);
 	}
 
 /**
@@ -25,11 +24,7 @@ class HeldenSonderfertigkeitenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->HeldenSonderfertigkeit->id = $id;
-		if (!$this->HeldenSonderfertigkeit->exists()) {
-			throw new NotFoundException(__('Invalid helden sonderfertigkeit'));
-		}
-		$this->set('heldenSonderfertigkeit', $this->HeldenSonderfertigkeit->read(null, $id));
+		$this->viewForXml($this->HeldenSonderfertigkeit, $id);
 	}
 
 /**
@@ -38,15 +33,7 @@ class HeldenSonderfertigkeitenController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			$this->HeldenSonderfertigkeit->create();
-			if ($this->HeldenSonderfertigkeit->save($this->request->data)) {
-				$this->Session->setFlash(__('The helden sonderfertigkeit has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The helden sonderfertigkeit could not be saved. Please, try again.'));
-			}
-		}
+		$this->addForXml($this->HeldenSonderfertigkeit);
 	}
 
 /**
