@@ -93,22 +93,67 @@ class AppController extends Controller {
 	 * Add a new object to the DB. Input is expected as POST data.
 	 * @param $model The model instance.
 	 */
-	protected function addForXml($model) {
+	protected function addForXml($model, $saveAssociated = false) {
 		//Get XML element names
-		$elementName = strtolower($this->modelClass);
+		$elementName = $this->getElementName();
 		if ($this->request->is('post')) {
 			//Create object
-			$model->create();
+			//$model->create();
 			//Write data to DB and save
-			if ($model->save($this->request->data)) {
+			$result = false;
+			if ($saveAssociated == true) {
+				$result = $model->saveAssociated($this->request->data);
+			} else {
+				$result = $model->save($this->request->data);
+			}
+			if ($result) {
 				$xml[$elementName]['id'] = $model->id;
-				$xml[$elementName]['name'] = $model->data[$this->modelClass][$model->displayField];
+				if (isset ($model->displayField) && isset($model->data[$this->modelClass][$model->displayField]))
+				{
+					$xml[$model]['name'] = $model->data[$this->modelClass][$model->displayField];
+				}
 				$this->set($elementName, $xml);
 				$this->set('_serialize', $elementName);
 			} else {
 				$this->response->statusCode(400);
-				$this->response->send();
+				$xml['error']['message'] = "Daten konnten nicht angelegt werden";
+				$this->set('error', $xml);
+				$this->set('_serialize', 'error');
+				//$this->response->send();
 			}
+		}
+	}
+
+	protected function getElementName() {
+		return strtolower($this->modelClass);
+	}
+
+	protected function editForXml($model, $id, $saveAssociated = false) {
+		//Get XML element names
+		$elementName = $this->getElementName();
+		$model->id = $id;
+		if (!$model->exists()) {
+			throw new NotFoundException(__('Invalid ' . $elementName));
+		}
+		if ($saveAssociated == true) {
+			$result = $model->saveAssociated($this->request->data);
+		} else {
+			$result = $model->save($this->request->data);
+		}
+		if ($result) {
+			$xml[$elementName]['id'] = $model->id;
+			if (isset ($model->displayField) && isset($model->data[$this->modelClass][$model->displayField]))
+			{
+				$xml[$elementName]['name'] = $model->data[$this->modelClass][$model->displayField];
+			}
+			$this->set($elementName, $xml);
+			$this->set('_serialize', $elementName);
+		} else {
+			$this->response->statusCode(400);
+			$xml['error']['message'] = "Daten konnten nicht aktualisiert werden";
+				$this->set('error', $xml);
+				$this->set('_serialize', 'error');
+			$this->response->send();
 		}
 	}
 }

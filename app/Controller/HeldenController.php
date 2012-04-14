@@ -33,21 +33,12 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
-			//Create object
-			$this->Held->create();
-			//Write data to DB and save
-			if ($this->Held->save($this->request->data["held"])) {
-				$this->Held->read();
-				$xml['held']['id'] = $this->Held->id;
-				$xml['held']['name'] = $this->Held->data['Held']['name'];
-				$this->set('held', $xml);
-				$this->set('_serialize', 'held');
-			} else {
-				$this->response->statusCode(400);
-				$this->response->send();
-			}
-		}
+		$data =& $this->request->data;
+		$data["Beschreibung"] = $data["Held"]["Beschreibung"];
+		unset($data["Held"]["Beschreibung"]);
+		$data["Wert"] = $data["Held"]["Wert"];
+		unset($data["Held"]["Wert"]);
+		$this->addForXml($this->Held, true);
 	}
 
 /**
@@ -57,47 +48,18 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->Held->id = $id;
-		if (!$this->Held->exists()) {
-			throw new NotFoundException(__('Invalid held'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Held->save($this->request->data)) {
-				$this->Session->setFlash(__('The held has been saved'));
-				$this->redirect(array('action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The held could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->Held->read(null, $id);
-		}
-		$eigenschaften = $this->Held->Eigenschaft->find('list');
-		$sonderfertigkeiten = $this->Held->Sonderfertigkeit->find('list');
-		$talente = $this->Held->Talent->find('list');
-		$vorteile = $this->Held->Vorteil->find('list');
-		$zauber = $this->Held->Zauber->find('list');
-		$this->set(compact('eigenschaften', 'sonderfertigkeiten', 'talente', 'vorteile', 'zauber'));
-	}
-
-/**
- * delete method
- *
- * @param string $id
- * @return void
- */
-	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
-		$this->Held->id = $id;
-		if (!$this->Held->exists()) {
-			throw new NotFoundException(__('Invalid held'));
-		}
-		if ($this->Held->delete()) {
-			$this->Session->setFlash(__('Held deleted'));
-			$this->redirect(array('action' => 'index'));
-		}
-		$this->Session->setFlash(__('Held was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$dataOnServer = $this->Held->findById($id);
+		//Get reference to data array
+		$data =& $this->request->data;
+		//Move dependent entries to top level for correct handling in saveAssociated
+		//Set ID field to ensure that data is updated, not inserted
+		$data["Beschreibung"] = $data["Held"]["Beschreibung"];
+		$data["Beschreibung"]["id"] = $dataOnServer["Beschreibung"]["id"];
+		unset($data["Held"]["Beschreibung"]);
+		$data["Wert"] = $data["Held"]["Wert"];
+		$data["Wert"]["id"] = $dataOnServer["Wert"]["id"];
+		unset($data["Held"]["Wert"]);
+		//Save data
+		$this->editForXml($this->Held, $id, true);
 	}
 }
