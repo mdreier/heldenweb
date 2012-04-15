@@ -15,5 +15,28 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+	$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
 ?>
-<?php echo $content_for_layout; ?>
+<div data-role="page">
+
+		<div data-role="header">
+			<h1><?php echo $title ?></h1>
+			<?php echo $this->Html->link('Helden', array('controller' => 'Helden', 'action' => 'index'), array('data-icon' => 'home', 'data-iconpos' => 'notext', 'data-direction' => 'reverse')); ?>
+		</div> <!-- header -->
+
+		<div data-role="content">
+
+				<?php echo $this->fetch('content'); ?>
+
+		</div> <!-- content -->
+
+		<div data-role="footer">
+			<?php echo $this->Html->link(
+					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
+					'http://www.cakephp.org/',
+					array('target' => '_blank', 'escape' => false)
+				);
+			?>
+		</div> <!-- footer -->
+	</div> <!-- page -->

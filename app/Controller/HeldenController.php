@@ -14,7 +14,12 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function index() {
+		//XML
 		$this->indexForXml($this->Held);
+
+		//HTML
+		$this->set('helden', $this->Held->find('all'));
+		$this->set('title', 'Helden');
 	}
 
 /**
@@ -24,7 +29,17 @@ class HeldenController extends AppController {
  * @return void
  */
 	public function view($id = null) {
+		//XML
 		$this->viewForXml($this->Held, $id);
+
+		//HTML
+		$this->Held->id = $id;
+		if (!$this->Held->exists()) {
+			throw new NotFoundException(__('Invalid ' . $model));
+		}
+		$this->set('data', $this->Held->read(null, $id));
+		$this->set('title', $this->Held->data['Held']['name']);
+		$this->layout = 'held';
 	}
 
 /**
