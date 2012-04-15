@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 02. April 2012 um 19:03
+-- Erstellungszeit: 15. April 2012 um 02:15
 -- Server Version: 5.1.61
 -- PHP-Version: 5.3.5-1ubuntu7.7
 
@@ -36,9 +36,8 @@ CREATE TABLE IF NOT EXISTS `beschreibungen` (
   `gewicht` int(11) NOT NULL COMMENT 'Gewicht in Stein (kg)',
   `groesse` int(30) NOT NULL COMMENT 'Größe in Halbfingern (cm)',
   `haarfarbe` varchar(30) NOT NULL,
-  `Stand` varchar(50) NOT NULL,
-  `Titel` text NOT NULL,
-  `sozialstatus` int(11) NOT NULL,
+  `stand` varchar(50) NOT NULL,
+  `titel` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Grunddaten der Helden';
 
@@ -51,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `beschreibungen` (
 DROP TABLE IF EXISTS `eigenschaften`;
 CREATE TABLE IF NOT EXISTS `eigenschaften` (
   `id` varchar(36) NOT NULL,
-  `kurzbezeichnung` varchar(2) NOT NULL,
+  `kurzbezeichnung` varchar(5) NOT NULL,
   `name` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -80,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `eigenschaften_helden` (
 DROP TABLE IF EXISTS `helden`;
 CREATE TABLE IF NOT EXISTS `helden` (
   `id` varchar(36) NOT NULL COMMENT 'Eindeutige UUID des Helden',
+  `identifier` varchar(20) NOT NULL,
   `name` text NOT NULL,
   `geschlecht` varchar(15) NOT NULL,
   `kultur` varchar(50) NOT NULL,
@@ -150,21 +150,6 @@ CREATE TABLE IF NOT EXISTS `helden_zauber` (
   `held_id` varchar(36) NOT NULL,
   `zauber_id` varchar(36) NOT NULL,
   `zauberfertigkeitswert` int(11) NOT NULL,
-  `repraesentation` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `repraesentationen`
---
-
-DROP TABLE IF EXISTS `repraesentationen`;
-CREATE TABLE IF NOT EXISTS `repraesentationen` (
-  `id` varchar(36) NOT NULL,
-  `zauber_id` varchar(36) NOT NULL,
-  `name` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -239,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `talente` (
 
 DROP TABLE IF EXISTS `vorteile`;
 CREATE TABLE IF NOT EXISTS `vorteile` (
-  `id` varchar(35) NOT NULL,
+  `id` varchar(36) NOT NULL,
   `name` varchar(50) NOT NULL,
   `auswahl` tinyint(1) NOT NULL,
   `mehrfachauswahl` tinyint(1) NOT NULL,
@@ -276,13 +261,14 @@ DROP TABLE IF EXISTS `zauber`;
 CREATE TABLE IF NOT EXISTS `zauber` (
   `id` varchar(36) NOT NULL,
   `name` text NOT NULL,
+  `repraesentation` text NOT NULL,
   `basiskomplexitaet` varchar(2) NOT NULL,
   `lernkomplexitaet` varchar(2) NOT NULL,
   `hauszauber` tinyint(1) DEFAULT NULL,
-  `Merkmale` text,
-  `probe1` varchar(2) NOT NULL,
-  `probe2` varchar(2) NOT NULL,
-  `probe3` varchar(2) NOT NULL,
+  `merkmale` text,
+  `probe1` varchar(36) NOT NULL,
+  `probe2` varchar(36) NOT NULL,
+  `probe3` varchar(36) NOT NULL,
   `kosten` text,
   `reichweite` text,
   `wirkungsdauer` text,
