@@ -107,6 +107,11 @@ class Held extends AppModel {
 			'className' => 'Wert',
 			'foreignKey' => 'held_id',
 			'dependent' => true,
+		),
+		'Kampf' => array(
+			'className' => 'Kampf',
+			'foreignKey' => 'held_id',
+			'dependent' => true,
 		)
 	);
 

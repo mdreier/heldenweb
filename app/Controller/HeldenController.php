@@ -44,6 +44,12 @@ class HeldenController extends AppController {
   		}
 	}
 
+	public function kampf($id = null) {
+		$this->leseHeld($id);
+
+		$this->set('selectedNav', 'kampf');
+	}
+
 	public function talente($id = null) {
 		$this->leseHeld($id);
 		$eigenschaften = $this->viewVars['eigenschaften'];

@@ -37,13 +37,15 @@ class HeldenDatenHelper extends AppHelper {
 		return $returnValue;
 	}
 
-    public function listEntry($label, $value) {
+    public function listEntry($label, $value, $withLi = true) {
 
-    	return "<li><span class=\"hw-list-entry-title\">"
+    	return ($withLi ? "<li>" : "")
+    			. "<span class=\"hw-list-entry-title\">"
     			. h($label)
     			. "</span><span class=\"hw-list-entry\">"
     			. h($value)
-    			. "</span></li>";
+    			. "</span>"
+    			. ($withLi ? "</li>" : "");
     }
 
     public function isTrue($value) {
@@ -85,6 +87,37 @@ class HeldenDatenHelper extends AppHelper {
 		}
 		$tag .= "</li>";
 		return $tag;
+	}
+
+	public function ruestung($ruestung, $sum = false) {
+		$return = "";
+		$return .= "<li";
+		if ($sum) {
+			$return .= " data-theme=\"e\" ";
+		}
+		$return .= ">";
+		$return .= "<h3>" . $ruestung['name'] . "</h3>";
+		$return .= "<p>" . $this->listEntry('Rüstschutz', $ruestung['schutz_gesamt'], false) . "</p>";
+		$return .= "<p>" . $this->listEntry('Behinderung', $ruestung['behinderung_gesamt'], false) . "</p>";
+		$return .= "<ul>";
+		$return .= $this->listEntry('Kopf', $ruestung['schutz_kopf']);
+		$return .= $this->listEntry('Brust', $ruestung['schutz_brust']);
+		$return .= $this->listEntry('Bauch', $ruestung['schutz_bauch']);
+		$return .= $this->listEntry('Rücken', $ruestung['schutz_ruecken']);
+		$return .= $this->listEntry('Linker Arm', $ruestung['schutz_arm_links']);
+		$return .= $this->listEntry('Rechter Arm', $ruestung['schutz_arm_rechts']);
+		$return .= $this->listEntry('Linkes Bein', $ruestung['schutz_bein_links']);
+		$return .= $this->listEntry('Rechtes Bein', $ruestung['schutz_bein_rechts']);
+		$return .= "</ul>\n</li>";
+		return $return;
+	}
+
+	public function waffenmodifikator($attacke, $parade) {
+		return "Attacke: " . sprintf("%+d", $attacke) . " / Parade: " . sprintf("%+d", $parade);
+	}
+
+	public function bruchfaktor($aktuell, $minimal) {
+		return $aktuell . " (Minimal: " . $minimal . ")";
 	}
 }
 ?>
