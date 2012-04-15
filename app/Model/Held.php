@@ -110,6 +110,28 @@ class Held extends AppModel {
 		)
 	);
 
+	public $hasMany = array(
+		'Nahkampfwaffe' => array(
+			'className' => 'Nahkampfwaffe',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
+		'Fernkampfwaffe' => array(
+			'className' => 'Fernkampfwaffe',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
+		'Schild' => array(
+			'className' => 'Schild',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
+		'Ruestung' => array(
+			'className' => 'Ruestung',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
+	);
 
 /**
  * hasAndBelongsToMany associations
