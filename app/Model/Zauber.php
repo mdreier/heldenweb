@@ -75,26 +75,18 @@ class Zauber extends AppModel {
 		),
 	);
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-
-/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
-		'Repraesentation' => array(
-			'className' => 'Repraesentation',
-			'foreignKey' => 'zauber_id',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
+	public $belongsTo = array(
+		'Probe1' => array (
+			'className' => 'Eigenschaft',
+			'foreignKey' => 'probe1'
+		),
+		'Probe2' => array (
+			'className' => 'Eigenschaft',
+			'foreignKey' => 'probe2'
+		),
+		'Probe3' => array (
+			'className' => 'Eigenschaft',
+			'foreignKey' => 'probe3'
 		)
 	);
 

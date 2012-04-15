@@ -1,5 +1,5 @@
 
-<ul data-role="listview" data-filter="true" data-filterPlaceholder="Held suchen..." data-inset="true">
+<ul data-role="listview" data-filter="true" data-filter-placeholder="Suche Held..." data-inset="true">
 	<?php foreach ($helden as $heldendaten) {
 		$held = $heldendaten['Held'];
 		$werte = $heldendaten['Wert']
