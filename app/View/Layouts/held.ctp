@@ -39,7 +39,7 @@
 				<ul>
 					<li><?php echo $this->HeldenNav->makeNavEntry('Held', 'view', $data['Held']['id'], $selectedNav); ?></li>
 					<li><?php echo $this->HeldenNav->makeNavEntry('Talente', 'talente', $data['Held']['id'], $selectedNav); ?></li>
-					<li><?php echo $this->HeldenNav->makeNavEntry('Ausrüstung', 'ausruestung', $data['Held']['id'], $selectedNav); ?></li>
+					<li><?php echo $this->HeldenNav->makeNavEntry('Inventar', 'inventar', $data['Held']['id'], $selectedNav); ?></li>
 					<li><?php echo $this->HeldenNav->makeNavEntry('Kampf', 'kampf', $data['Held']['id'], $selectedNav); ?></li>
 					<?php if ($hatZauber) { ?>
 						<li><?php echo $this->HeldenNav->makeNavEntry('Zauber', 'zauber', $data['Held']['id'], $selectedNav); ?></li>

@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  */
 class HeldenController extends AppController {
 
-	public $helpers = array('HeldenNav', 'HeldenDaten');
+	public $helpers = array('HeldenNav', 'HeldenDaten', 'Time');
 
 	public $components = array('RequestHandler');
 /**
@@ -183,5 +183,30 @@ class HeldenController extends AppController {
 		unset($data["Held"]["Wert"]);
 		//Save data
 		$this->editForXml($this->Held, $id, true);
+	}
+
+	public function inventar($id = null) {
+		$this->leseHeld($id);
+
+		//Gegenstände
+		$this->set('gegenstaende', $this->Held->data['Gegenstand']);
+
+		//Geld
+		$muenzen = array();
+		$hauptMuenzArt = "";
+		foreach ($this->Held->data['Muenze'] as $muenze) {
+			$muenzen[$muenze['gruppe']][$muenze['name']] = $muenze['anzahl'];
+			$hauptMuenzArt = $muenze['gruppe'];
+		}
+		$this->set('muenzen', $muenzen);
+		var_dump($muenzen);
+		if (count($muenzen) <= 1) {
+			$this->set('muenzGruppen', false);
+			$this->set('hauptMuenzArt', $hauptMuenzArt);
+		} else {
+			$this->set('muenzGruppen', true);
+		}
+
+		$this->set('selectedNav', 'inventar');
 	}
 }

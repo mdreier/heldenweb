@@ -73,4 +73,6 @@
 			<?php echo $this->HeldenDaten->listEntry('GP-Rest:', $data['Wert']['gp_rest']); ?>
 		</ul>
 	</li>
+
+	<?php echo $this->HeldenDaten->listEntry('Zuletzt synchronisiert:', $this->Time->format('j.m.Y H:i:s', $data['Held']['modified'])); ?>
 </ul>
