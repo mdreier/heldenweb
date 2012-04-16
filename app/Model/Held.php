@@ -136,6 +136,16 @@ class Held extends AppModel {
 			'foreign_key' => 'held_id',
 			'dependent' => true,
 		),
+		'Muenze' => array(
+			'className' => 'Muenze',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
+		'Gegenstand' => array(
+			'className' => 'Gegenstand',
+			'foreign_key' => 'held_id',
+			'dependent' => true,
+		),
 	);
 
 /**
@@ -218,7 +228,7 @@ class Held extends AppModel {
 			'finderQuery' => '',
 			'deleteQuery' => '',
 			'insertQuery' => ''
-		)
+		),
 	);
 
 }
