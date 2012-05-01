@@ -68,24 +68,30 @@ class HeldenDatenHelper extends AppHelper {
 
 	public function talent($talent, $behinderung = false, $kampf = false, $sprache = false) {
 		$tag = "<li data-filtertext=\"" . $talent['name'] . "\">";
-
-		$tag .= "<h3>" . h($talent['name']) . ": " . h($talent['wert']) . "</h3>";
+		$link = false;
+		$text = "<h3>" . h($talent['name']) . ": " . h($talent['wert']) . "</h3>";
 		if ($sprache) {
-			$tag .= "<p>Sprachkomplexität: " . $talent['sprachkomplexitaet']. "</p>";
+			$text .= "<p>Sprachkomplexität: " . $talent['sprachkomplexitaet']. "</p>";
 		} else if ($kampf) {
-			$tag .= "<p>Attacke: " . $talent['attacke'] . "&nbsp;/&nbsp;";
-			$tag .= "Parade: " . $talent['parade'] . "</p>";
+			$text .= "<p>Attacke: " . $talent['attacke'] . "&nbsp;/&nbsp;";
+			$text .= "Parade: " . $talent['parade'] . "</p>";
 		} else {
 			if ($talent['hatProbe'] == true) {
-				$tag .= "<p>Probe: " . $talent['probe1_eigenschaft'] . "/" . $talent['probe2_eigenschaft'] . "/" . $talent['probe3_eigenschaft'];
-				$tag .= " (" . $talent['probe1_wert'] . "/" . $talent['probe2_wert'] . "/" . $talent['probe3_wert'] . ")</p>";
+				$text .= "<p>Probe: " . $talent['probe1_eigenschaft'] . "/" . $talent['probe2_eigenschaft'] . "/" . $talent['probe3_eigenschaft'];
+				$text .= " (" . $talent['probe1_wert'] . "/" . $talent['probe2_wert'] . "/" . $talent['probe3_wert'] . ")</p>";
+				$link = true;
 			}
 		}
 		if ($behinderung) {
 			if ($talent['behinderung'] == "") {
 				$talent['behinderung'] = '&mdash;';
 			}
-			$tag .= "<span class=\"ui-li-count\">" . $talent['behinderung'] . "</span>";
+			$text .= "<span class=\"ui-li-count\">" . $talent['behinderung'] . "</span>";
+		}
+		if ($link) {
+			$tag .= $this->linkToDiceRollerForTalent($text, $talent);
+		} else {
+			$tag .= $text;
 		}
 		$tag .= "</li>";
 		return $tag;
@@ -120,6 +126,44 @@ class HeldenDatenHelper extends AppHelper {
 
 	public function bruchfaktor($aktuell, $minimal) {
 		return $aktuell . " (Minimal: " . $minimal . ")";
+	}
+
+	private function linkToDiceRollerForTalent($text, $talent, $button = false) {
+		return $this->linkToDiceRoller($text, $talent['name'], $talent['wert'], $talent['probe1'], $talent['probe2'], $talent['probe3'], $button);
+	}
+
+	public function linkToDiceRoller($text, $talentname, $talentwert, $probe1, $probe2, $probe3, $button = false) {
+		$routing = array('controller' => 'Wuerfel', 'action' => 'talent');
+
+		$this->makeLinkSave($probe1);
+		$this->makeLinkSave($probe2);
+		$this->makeLinkSave($probe3);
+		$routing['probe1'] = $probe1;
+		$routing['probe2'] = $probe2;
+		$routing['probe3'] = $probe3;
+		$routing['talentwert'] = $this->urlencode($talentwert);
+		$routing['talentname'] = $this->urlencode($talentname);
+
+		$options = array('data-rel' => 'dialog', 'escape' => false, 'data-transition' => 'pop');
+		if ($button) {
+			$options['data-role'] = 'button';
+		}
+		return $this->Html->link($text, $routing, $options);
+	}
+
+	private function makeLinkSave(&$probe) {
+		$probe['wert'] = $this->urlencode($probe['wert']);
+		$probe['eigenschaft'] = $this->urlencode($probe['eigenschaft']);
+	}
+
+	/**
+	 * This function encodes the text using <code>urlencode()</code>.
+	 * Forward slashes are double-encoded.
+	 *
+	 * @param String $text
+	 */
+	private function urlencode($text) {
+		return urlencode(str_replace('/', '%2f', $text));
 	}
 }
 ?>

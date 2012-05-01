@@ -63,12 +63,23 @@ class HeldenController extends AppController {
 				$talentOut['hatProbe'] = false;
 			} else {
 				$talentOut['hatProbe'] = true;
+				//Probe 1
 				$talentOut['probe1_eigenschaft'] = $talentDaten['Probe1']['kurzbezeichnung'];
 				$talentOut['probe1_wert'] = $eigenschaften[$talentOut['probe1_eigenschaft']]['wert'];
+				$talentOut['probe1']['eigenschaft'] = $talentOut['probe1_eigenschaft'];
+				$talentOut['probe1']['wert'] = $talentOut['probe1_wert'];
+
+				//Probe 2
 				$talentOut['probe2_eigenschaft'] = $talentDaten['Probe2']['kurzbezeichnung'];
 				$talentOut['probe2_wert'] = $eigenschaften[$talentOut['probe2_eigenschaft']]['wert'];
+				$talentOut['probe2']['eigenschaft'] = $talentOut['probe2_eigenschaft'];
+				$talentOut['probe2']['wert'] = $talentOut['probe2_wert'];
+
+				//Probe 3
 				$talentOut['probe3_eigenschaft'] = $talentDaten['Probe3']['kurzbezeichnung'];
 				$talentOut['probe3_wert'] = $eigenschaften[$talentOut['probe3_eigenschaft']]['wert'];
+				$talentOut['probe3']['eigenschaft'] = $talentOut['probe3_eigenschaft'];
+				$talentOut['probe3']['wert'] = $talentOut['probe3_wert'];
 			}
 			$talentOut['wert'] = $talent['HeldenTalent']['talentwert'];
 			$talentOut['attacke'] = $talent['HeldenTalent']['attacke'];
