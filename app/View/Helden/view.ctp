@@ -3,7 +3,14 @@
 	<?php echo $this->HeldenDaten->listEntry('Rasse:', $data['Held']['rasse']); ?>
 	<?php echo $this->HeldenDaten->listEntry('Kultur:', $data['Held']['kultur']); ?>
 	<?php echo $this->HeldenDaten->listEntry('Profession:', $data['Held']['profession']); ?>
-	<?php echo $this->HeldenDaten->listEntry('Stufe:', $data['Held']['stufe']); ?>
+	<!-- Stufe entfernt wg. fehlerhafter Angabe -->
+	<?php //echo $this->HeldenDaten->listEntry('Stufe:', $data['Held']['stufe']); ?>
+
+	<li data-theme="a" data-role="divider">Werte</li>
+	<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['LE']); ?>
+	<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['AsE']); ?>
+	<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['KaE']); ?>
+	<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['MR']); ?>
 
 	<li data-theme="a">Beschreibung
 		<ul>
@@ -52,11 +59,7 @@
 
 	<li data-theme="a">Basiswerte
 		<ul>
-			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['LE']); ?>
 			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['AU']); ?>
-			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['AsE']); ?>
-			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['KaE']); ?>
-			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['MR']); ?>
 			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['INI']); ?>
 			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['AT'], 'Attacke-Basis'); ?>
 			<?php echo $this->HeldenDaten->eigenschaft($eigenschaften['PA'], 'Parade-Basis'); ?>

@@ -69,15 +69,17 @@ class HeldenDatenHelper extends AppHelper {
 	public function talent($talent, $behinderung = false, $kampf = false, $sprache = false) {
 		$tag = "<li data-filtertext=\"" . $talent['name'] . "\">";
 
-		$tag .= "<h3>" . $talent['name'] . ": " . $talent['wert'] . "</h3>";
+		$tag .= "<h3>" . h($talent['name']) . ": " . h($talent['wert']) . "</h3>";
 		if ($sprache) {
 			$tag .= "<p>Sprachkomplexität: " . $talent['sprachkomplexitaet']. "</p>";
 		} else if ($kampf) {
-			$tag .= "<p>Attacke: " . $talent['attacke'] . "</p>";
-			$tag .= "<p>Parade: " . $talent['parade'] . "</p>";
+			$tag .= "<p>Attacke: " . $talent['attacke'] . "&nbsp;/&nbsp;";
+			$tag .= "Parade: " . $talent['parade'] . "</p>";
 		} else {
-			$tag .= "<p>Probe: " . $talent['probe1_eigenschaft'] . "/" . $talent['probe2_eigenschaft'] . "/" . $talent['probe3_eigenschaft'];
-			$tag .= " (" . $talent['probe1_wert'] . "/" . $talent['probe2_wert'] . "/" . $talent['probe3_wert'] . ")</p>";
+			if ($talent['hatProbe'] == true) {
+				$tag .= "<p>Probe: " . $talent['probe1_eigenschaft'] . "/" . $talent['probe2_eigenschaft'] . "/" . $talent['probe3_eigenschaft'];
+				$tag .= " (" . $talent['probe1_wert'] . "/" . $talent['probe2_wert'] . "/" . $talent['probe3_wert'] . ")</p>";
+			}
 		}
 		if ($behinderung) {
 			if ($talent['behinderung'] == "") {

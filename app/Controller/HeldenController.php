@@ -59,12 +59,17 @@ class HeldenController extends AppController {
 
 			$talentOut['name'] = $talentDaten['Talent']['name'];
 			$talentOut['sprachkomplexitaet'] = $talentDaten['Talent']['sprachkomplexitaet'];
-			$talentOut['probe1_eigenschaft'] = $talentDaten['Probe1']['kurzbezeichnung'];
-			$talentOut['probe1_wert'] = $eigenschaften[$talentOut['probe1_eigenschaft']]['wert'];
-			$talentOut['probe2_eigenschaft'] = $talentDaten['Probe2']['kurzbezeichnung'];
-			$talentOut['probe2_wert'] = $eigenschaften[$talentOut['probe2_eigenschaft']]['wert'];
-			$talentOut['probe3_eigenschaft'] = $talentDaten['Probe3']['kurzbezeichnung'];
-			$talentOut['probe3_wert'] = $eigenschaften[$talentOut['probe3_eigenschaft']]['wert'];
+			if (!isset($talentDaten['Probe1'])) {
+				$talentOut['hatProbe'] = false;
+			} else {
+				$talentOut['hatProbe'] = true;
+				$talentOut['probe1_eigenschaft'] = $talentDaten['Probe1']['kurzbezeichnung'];
+				$talentOut['probe1_wert'] = $eigenschaften[$talentOut['probe1_eigenschaft']]['wert'];
+				$talentOut['probe2_eigenschaft'] = $talentDaten['Probe2']['kurzbezeichnung'];
+				$talentOut['probe2_wert'] = $eigenschaften[$talentOut['probe2_eigenschaft']]['wert'];
+				$talentOut['probe3_eigenschaft'] = $talentDaten['Probe3']['kurzbezeichnung'];
+				$talentOut['probe3_wert'] = $eigenschaften[$talentOut['probe3_eigenschaft']]['wert'];
+			}
 			$talentOut['wert'] = $talent['HeldenTalent']['talentwert'];
 			$talentOut['attacke'] = $talent['HeldenTalent']['attacke'];
 			$talentOut['parade'] = $talent['HeldenTalent']['parade'];

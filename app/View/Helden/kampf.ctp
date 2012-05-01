@@ -1,6 +1,7 @@
 <ul data-role="listview">
 
 	<?php echo $this->HeldenDaten->listEntry('Ausweichen', $data['Kampf']['ausweichen']); ?>
+	<?php echo $this->HeldenDaten->listEntry('Initiative', $eigenschaften['INI']['wert']); ?>
 
 	<li>
 		<h3>Raufen</h3>
